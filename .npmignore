@@ -1,0 +1,7 @@
+*
+!/dist/**/*
+!/lib/**/*
+!/README.md
+!/package*.json
+!/tsconfig.json
+!tslint.json

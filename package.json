@@ -1,0 +1,52 @@
+{
+    "name": "velay",
+    "version": "0.0.1-alpha.0",
+    "description": "vue page and fragments",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "types": "lib/types/index.d.ts",
+    "typings": "lib/types/index.d.ts",
+    "repository": "git@github.com:thundernet8/Velay.git",
+    "author": "thundernet8 <wuxueqian2010@hotmail.com>",
+    "license": "MIT",
+    "keywords": [
+        "vue",
+        "vuex",
+        "bigpipe",
+        "pagelet",
+        "typescript"
+    ],
+    "bugs": {
+        "url": "https://github.com/thundernet8/Velay/issues"
+    },
+    "homepage": "https://github.com/thundernet8/Velay#readme",
+    "scripts": {
+        "clean": "rimraf dist",
+        "prebuild": "npm run clean",
+        "build": "rollup -c && cp src/types lib/",
+        "prepublishOnly": "npm run build",
+        "docs:build": "vuepress build docs",
+        "docs:serve": "vuepress dev docs",
+        "lint": "tslint -p tsconfig.json",
+        "lint:fix": "tslint -p tsconfig.json --fix"
+    },
+    "peerDependencies": {
+        "vue": ">=2",
+        "vuex": "3"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "prettier": "^1.16.3",
+        "rimraf": "^2.6.3",
+        "rollup": "^1.1.2",
+        "rollup-plugin-typescript2": "^0.19.2",
+        "tslint": "^5.12.1",
+        "tslint-config-prettier": "^1.17.0",
+        "tslint-config-standard": "^8.0.1",
+        "tslint-plugin-prettier": "^2.0.1",
+        "typescript": "^3.3.1",
+        "vue": "^2.5.22",
+        "vuepress": "^0.14.8",
+        "vuex": "^3.1.0"
+    }
+}
