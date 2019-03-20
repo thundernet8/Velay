@@ -12,7 +12,7 @@
         "noImplicitThis": true,
         "sourceMap": true,
         "baseUrl": ".",
-        "types": ["webpack-env", "jest"],
+        "types": ["webpack-env", "jest", "@types/node"],
         "paths": {
             "@/*": ["src/*"]
         },

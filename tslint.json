@@ -9,7 +9,7 @@
                 "semi": false,
                 "arrowParens": "always",
                 "singleQuote": true,
-                "trailingComma": "none",
+                "trailingComma": "always",
                 "printWidth": 120
             }
         ],
