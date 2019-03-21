@@ -78,11 +78,6 @@ declare namespace Velay {
         // TODO 2.6+
     }
 
-    /**
-     * decorator of an inject
-     * @param from key
-     * @return PropertyDecorator
-     */
     export function Inject(
         options?:
             | {
@@ -92,40 +87,14 @@ declare namespace Velay {
             | InjectKey
     ): PropertyDecorator;
 
-    /**
-     * decorator of a provide
-     * @param key key
-     * @return PropertyDecorator | void
-     */
     export function Provide(key?: string | symbol): PropertyDecorator;
 
-    /**
-     * decorator of model
-     * @param  event event name
-     * @param options options
-     * @return PropertyDecorator
-     */
     export function Model(event?: string, options?: PropOptions | TConstructor[] | TConstructor): PropertyDecorator;
 
-    /**
-     * decorator of a prop
-     * @param  options the options for the prop
-     * @return PropertyDecorator | void
-     */
     export function Prop(options?: PropOptions | TConstructor[] | TConstructor): PropertyDecorator;
 
-    /**
-     * decorator of a watch function
-     * @param  path the path or the expression to observe
-     * @param  WatchOption
-     * @return MethodDecorator
-     */
     export function Watch(path: string, options?: WatchOptions): MethodDecorator;
-    /**
-     * decorator of an event-emitter function
-     * @param  event The name of the event
-     * @return MethodDecorator
-     */
+
     export function Emit(event?: string): MethodDecorator;
 
     export function Component<V extends Vue>(
