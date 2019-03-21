@@ -32,7 +32,7 @@ export function componentFactory(Component: VueClass<Vue>, options: ComponentOpt
 
         // hooks
         if ($internalHooks.indexOf(key) > -1) {
-            options[key] = proto[key];
+            (options as any)[key] = proto[key];
             return;
         }
         const descriptor = Object.getOwnPropertyDescriptor(proto, key)!;
