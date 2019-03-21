@@ -113,6 +113,8 @@ declare namespace Velay {
         static resolve<T>(token: TConstructor<T>): T;
 
         static has(token: TConstructor): boolean;
+
+        static toString(): string;
     }
 
     export class Injector {
@@ -125,6 +127,8 @@ declare namespace Velay {
         resolve<T>(token: TConstructor<T>): T;
 
         has(token: TConstructor): boolean;
+
+        toString(): string;
     }
 
     export interface VueComponent<T> extends VueComponentLifeCycle<T> {

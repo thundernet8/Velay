@@ -17,10 +17,10 @@ class Car {
 
 describe('StaticInjector', () => {
     it('should instantiate a class without dependencies', () => {
-        StaticInjector.registerProvider({
-            token: Engine,
-            cacheable: false
-        });
+        // StaticInjector.registerProvider({
+        //     token: Engine,
+        //     cacheable: false
+        // });
         const engine = StaticInjector.resolve(Engine);
 
         expect(engine).toBeAnInstanceOf(Engine);

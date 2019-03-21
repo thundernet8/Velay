@@ -19,4 +19,8 @@ export default class StaticInjector {
     static has(token: TConstructor): boolean {
         return StaticInjector._injector.has(token);
     }
+
+    static toString() {
+        return `Static${StaticInjector._injector.toString()}`;
+    }
 }

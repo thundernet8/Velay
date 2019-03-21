@@ -26,7 +26,9 @@ export default class Injector {
     registerProvider(...providers: ProviderRecord[]): this {
         providers.forEach(provider => {
             if (this._records.has(provider.token)) {
-                Debugger.warn(`Provider of ${provider.token.name} has been registered.`);
+                Debugger.warn(`Provider of ${provider.token.name} has been registered already.`);
+            } else {
+                Debugger.log(`Provider of ${provider.token.name} is registered now.`);
             }
             if (provider.value === undefined) {
                 provider.value = EMPTY;
@@ -91,5 +93,12 @@ export default class Injector {
 
     has(token: TConstructor): boolean {
         return this._records.has(token);
+    }
+
+    toString() {
+        const tokens: string[] = [];
+        const records = this._records;
+        records.forEach((v, token) => tokens.push(token.name || token.toString()));
+        return `Injector[${tokens.join(', ')}]`;
     }
 }
