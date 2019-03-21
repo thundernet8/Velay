@@ -8,13 +8,11 @@ export default class Store<T> extends Vuex.Store<T> {}
 type ObjectDescriptor<D, M> = M & ThisType<D & M>;
 
 class RootStore<T> extends Store<ObjectDescriptor<T, { module: number }>> {
-    module1: ModuleStore;
-
-    test() {}
+    // module1: ModuleStore<any>;
 }
 
 class ModuleStore<T> extends Store<T> {
-    state = {
-        module: 1
-    };
+    // state = {
+    //     module: 1
+    // };
 }

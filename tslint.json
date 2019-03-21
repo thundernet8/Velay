@@ -1,19 +1,25 @@
 {
     "defaultSeverity": "error",
-    "extends": ["tslint-config-standard", "tslint-config-prettier"],
+    "extends": ["tslint-config-prettier", "tslint-config-standard"],
+    "linterOptions": {
+        "exclude": ["test/**", "src/lib/**", "src/types/**", "lib/**", "docs/**"]
+    },
     "jsRules": {},
     "rules": {
         "prettier": [
-            true,
+            false,
             {
-                "semi": false,
+                "semi": true,
                 "arrowParens": "always",
                 "singleQuote": true,
-                "trailingComma": "always",
+                "trailingComma": "all",
                 "printWidth": 120
             }
         ],
-        "radix": false
+        "radix": false,
+        "ter-indent": [true, 4],
+        "semicolon": [true, "always"],
+        "space-before-function-paren": false
     },
     "rulesDirectory": ["tslint-plugin-prettier"]
 }

@@ -9,7 +9,7 @@ export default class StaticInjector {
     private static readonly _injector: Injector = Injector.create();
 
     static registerProvider(...providers: ProviderRecord[]) {
-        //
+        return StaticInjector._injector.registerProvider(...providers);
     }
 
     static resolve<T>(token: TConstructor<T>): T {

@@ -28,6 +28,9 @@ export default class Injector {
             if (this._records.has(provider.token)) {
                 Debugger.warn(`Provider of ${provider.token.name} has been registered.`);
             }
+            if (provider.value === undefined) {
+                provider.value = EMPTY;
+            }
             this._records.set(provider.token, provider);
         });
         return this;

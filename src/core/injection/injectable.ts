@@ -7,8 +7,19 @@ const DEFAULT_INJECTABLE_OPTIONS: InjectableOptions = {
     cacheable: true
 };
 
-export default function Injectable(options?: InjectableOptions): any {
-    const mergedOptions = Object.assign({}, DEFAULT_INJECTABLE_OPTIONS, options || {});
+export default function Injectable(options?: InjectableOptions | TConstructor): any {
+    let mergedOptions: any;
+    if (typeof options === 'function') {
+        mergedOptions = DEFAULT_INJECTABLE_OPTIONS;
+        Reflect.defineMetadata(INJECTABLE_FLAG, true, options);
+        StaticInjector.registerProvider({
+            token: options,
+            cacheable: mergedOptions.cacheable,
+            value: EMPTY
+        });
+        return options;
+    }
+    mergedOptions = Object.assign({}, DEFAULT_INJECTABLE_OPTIONS, options || {});
     return function(target: TConstructor) {
         // const paramTypes = Reflect.getMetadata('design:paramtypes', target);
         Reflect.defineMetadata(INJECTABLE_FLAG, true, target);
@@ -19,5 +30,5 @@ export default function Injectable(options?: InjectableOptions): any {
             cacheable: mergedOptions.cacheable,
             value: EMPTY
         });
-    };
+    } as any;
 }

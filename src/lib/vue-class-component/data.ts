@@ -19,9 +19,9 @@ export function collectDataFromConstructor(vm: Vue, Component: VueClass<Vue>) {
         keys.forEach(key => {
             if (key.charAt(0) !== '_') {
                 Object.defineProperty(this, key, {
-                    get: () => vm[key],
+                    get: () => (vm as any)[key],
                     set: value => {
-                        vm[key] = value;
+                        (vm as any)[key] = value;
                     },
                     configurable: true
                 });
@@ -38,8 +38,8 @@ export function collectDataFromConstructor(vm: Vue, Component: VueClass<Vue>) {
     // create plain data object
     const plainData = {};
     Object.keys(data).forEach(key => {
-        if (data[key] !== undefined) {
-            plainData[key] = data[key];
+        if ((data as any)[key] !== undefined) {
+            (plainData as any)[key] = (data as any)[key];
         }
     });
 

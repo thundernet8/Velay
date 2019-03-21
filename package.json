@@ -23,12 +23,13 @@
     "scripts": {
         "clean": "rimraf dist",
         "prebuild": "npm run clean",
-        "build": "rollup -c && cp src/types lib/",
+        "build": "rollup -c && cp -R src/types lib/",
         "prepublishOnly": "npm run build",
         "docs:build": "vuepress build docs",
         "docs:serve": "vuepress dev docs",
-        "lint": "tslint -p tsconfig.json",
-        "lint:fix": "tslint -p tsconfig.json --fix"
+        "lint": "tslint --format stylish -p tsconfig.json",
+        "lint:fix": "tslint --format stylish -p tsconfig.json --fix",
+        "test": "npm run lint && karma start"
     },
     "peerDependencies": {
         "vue": ">=2",
@@ -40,8 +41,19 @@
         "vue-property-decorator": "^8.0.0"
     },
     "devDependencies": {
+        "@types/jasmine": "^3.3.12",
         "@types/node": "^11.11.4",
+        "jasmine": "^3.3.1",
+        "jasmine-core": "^3.3.0",
+        "karma": "^4.0.1",
+        "karma-chrome-launcher": "^2.2.0",
+        "karma-coverage": "^1.1.2",
+        "karma-jasmine": "^2.0.1",
+        "karma-sourcemap-loader": "^0.3.7",
+        "karma-spec-reporter": "^0.0.32",
+        "karma-typescript": "^4.0.0",
         "prettier": "^1.16.3",
+        "puppeteer": "^1.13.0",
         "rimraf": "^2.6.3",
         "rollup": "^1.1.2",
         "rollup-plugin-typescript2": "^0.19.2",
