@@ -37,6 +37,7 @@
     "dependencies": {
         "mobx": "^5.9.0",
         "reflect-metadata": "^0.1.13",
+        "tslib": "^1.9.3",
         "vue-property-decorator": "^8.0.0"
     },
     "devDependencies": {

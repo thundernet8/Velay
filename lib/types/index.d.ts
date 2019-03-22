@@ -1,4 +1,4 @@
-import Vue, { VueConstructor, VNode, ComponentOptions, PropOptions, WatchOptions } from 'vue';
+import RawVue, { VueConstructor, VNode, ComponentOptions, PropOptions, WatchOptions } from 'vue';
 import { InjectKey } from 'vue/types/options';
 import { InternalJSX } from './jsx';
 import { TConstructor, InjectableOptions, ProviderRecord } from './internal';
@@ -97,10 +97,10 @@ declare namespace Velay {
 
     export function Emit(event?: string): MethodDecorator;
 
-    export function Component<V extends Vue>(
+    export function Component<V extends RawVue>(
         options: ComponentOptions<V> & ThisType<V>
     ): <VC extends VueClass<V>>(target: VC) => VC;
-    export function Component<VC extends VueClass<Vue>>(target: VC): VC;
+    export function Component<VC extends VueClass<RawVue>>(target: VC): VC;
 
     export function registerHooks(keys: string[]): void;
 
@@ -132,13 +132,15 @@ declare namespace Velay {
     }
 
     export interface VueComponent<T> extends VueComponentLifeCycle<T> {
-        $parent: Vue;
-        $children: Vue[];
+        $parent: RawVue;
+        $children: RawVue[];
     }
 
-    export class VueComponent<T> extends Vue {
+    export class VueComponent<T> extends RawVue {
         _props_: InternalJSX.ElementAttrs<T>;
 
         [propOrDataName: string]: any;
     }
+
+    export const Vue: VueConstructor;
 }

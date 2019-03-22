@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 /**
  * Decorators
  */
@@ -26,6 +28,7 @@ export default {
     registerHooks,
     Injectable,
     VueComponent,
+    Vue,
     StaticInjector,
     Injector
 };

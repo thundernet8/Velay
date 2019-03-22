@@ -33,7 +33,7 @@ module.exports = function(config) {
             'test/*.spec.ts': ['karma-typescript'],
             'test/**/*.ts': ['karma-typescript']
         },
-        browsers: ['ChromeHeadless'],
+        browsers: ['Chrome'],
         // you can define custom flags
         customLaunchers: {
             Chrome_without_security: {
@@ -42,7 +42,7 @@ module.exports = function(config) {
             }
         },
         reporters: ['dots', 'spec', 'karma-typescript'],
-        singleRun: true,
+        singleRun: false,
         urlRoot: '/',
         autoWatch: true,
         colors: true,
