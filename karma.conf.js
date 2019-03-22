@@ -42,7 +42,7 @@ module.exports = function(config) {
             }
         },
         reporters: ['dots', 'spec', 'karma-typescript'],
-        singleRun: false,
+        singleRun: true,
         urlRoot: '/',
         autoWatch: true,
         colors: true,
