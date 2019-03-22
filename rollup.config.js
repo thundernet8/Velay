@@ -10,7 +10,7 @@ export default [
             sourcemap: true,
             exports: 'named'
         })),
-        external: ['vuex'],
+        external: ['vue', 'reflect-metadata', 'vue-property-decorator', 'mobx'],
         plugins: [typescript({ useTsconfigDeclarationDir: true })]
     }
 ];

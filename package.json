@@ -32,13 +32,11 @@
         "test": "npm run lint && karma start"
     },
     "peerDependencies": {
-        "vue": ">=2",
-        "vuex": "3"
+        "vue": ">=2"
     },
     "dependencies": {
         "mobx": "^5.9.0",
         "reflect-metadata": "^0.1.13",
-        "vue-class-component": "^7.0.1",
         "vue-property-decorator": "^8.0.0"
     },
     "devDependencies": {
@@ -64,7 +62,6 @@
         "tslint-plugin-prettier": "^2.0.1",
         "typescript": "^3.3.1",
         "vue": "^2.5.22",
-        "vuepress": "^0.14.8",
-        "vuex": "^3.1.0"
+        "vuepress": "^0.14.8"
     }
 }
