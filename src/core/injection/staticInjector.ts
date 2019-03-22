@@ -20,6 +20,10 @@ export default class StaticInjector {
         return StaticInjector._injector.has(token);
     }
 
+    static list(): ProviderRecord[] {
+        return StaticInjector._injector.list();
+    }
+
     static toString() {
         return `Static${StaticInjector._injector.toString()}`;
     }

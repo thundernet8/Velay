@@ -2,7 +2,8 @@ import RawVue, { VueConstructor, VNode, ComponentOptions, PropOptions, WatchOpti
 import { InjectKey } from 'vue/types/options';
 import { InternalJSX } from './jsx';
 import { TConstructor, InjectableOptions, ProviderRecord } from './internal';
-import { VueClass } from '../lib/vue-class-component/declarations';
+
+type VueClass<V> = { new (...args: any[]): V & RawVue } & typeof RawVue;
 
 export = Velay;
 
@@ -114,6 +115,8 @@ declare namespace Velay {
 
         static has(token: TConstructor): boolean;
 
+        static list(): ProviderRecord[];
+
         static toString(): string;
     }
 
@@ -127,6 +130,8 @@ declare namespace Velay {
         resolve<T>(token: TConstructor<T>): T;
 
         has(token: TConstructor): boolean;
+
+        list(): ProviderRecord[];
 
         toString(): string;
     }
@@ -143,4 +148,14 @@ declare namespace Velay {
     }
 
     export const Vue: VueConstructor;
+
+    export const version: string;
+
+    interface VelayConfig {
+        debug: boolean;
+    }
+
+    export const config: VelayConfig;
+
+    export const providers: ProviderRecord[];
 }

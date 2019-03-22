@@ -1,4 +1,5 @@
 // TODO env and log level
+import Config from '../config';
 
 export default class Debugger {
     private static get _prefixedMsg() {
@@ -7,7 +8,7 @@ export default class Debugger {
     }
 
     private static _shouldOutput() {
-        return true;
+        return !!Config.debug;
     }
 
     static output(type: string, args: any[]) {

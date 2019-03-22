@@ -17,7 +17,12 @@ import VueComponent from './core/component/vue-component';
 import StaticInjector from './core/injection/staticInjector';
 import Injector from './core/injection/injector';
 
-export default {
+/**
+ * Config
+ */
+import Config from './core/config';
+
+const Velay = {
     Inject,
     Model,
     Prop,
@@ -30,5 +35,29 @@ export default {
     VueComponent,
     Vue,
     StaticInjector,
-    Injector
+    Injector,
+    version: '',
+    config: {},
+    providers: []
 };
+
+Object.defineProperty(Velay, 'config', {
+    configurable: false,
+    writable: false,
+    value: Config
+});
+
+Object.defineProperty(Velay, 'version', {
+    configurable: false,
+    writable: false,
+    value: '0.0.1'
+});
+
+Object.defineProperty(Velay, 'providers', {
+    configurable: false,
+    get() {
+        return StaticInjector.list();
+    }
+});
+
+export default Velay;

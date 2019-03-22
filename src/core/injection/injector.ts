@@ -95,6 +95,10 @@ export default class Injector {
         return this._records.has(token);
     }
 
+    list(): ProviderRecord[] {
+        return Array.from(this._records.values());
+    }
+
     toString() {
         const tokens: string[] = [];
         const records = this._records;
