@@ -36,6 +36,7 @@
         "vuex": "3"
     },
     "dependencies": {
+        "mobx": "^5.9.0",
         "reflect-metadata": "^0.1.13",
         "vue-class-component": "^7.0.1",
         "vue-property-decorator": "^8.0.0"
