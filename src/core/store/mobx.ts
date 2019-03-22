@@ -60,7 +60,7 @@ export function reactiveComponent(name: string, Component: VueClass<Vue>) {
 
         vm[DISPOSE_REACTIVE] = reaction.getDisposer();
 
-        return reactiveRender;
+        return reactiveRender();
     };
 
     Component.prototype.$destory = function(vm: any) {
