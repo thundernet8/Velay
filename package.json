@@ -1,6 +1,6 @@
 {
     "name": "velay",
-    "version": "0.0.1-alpha.1",
+    "version": "0.0.1-alpha.2",
     "description": "vue page and fragments",
     "main": "lib/cjs/index.js",
     "module": "lib/esm/index.js",
