@@ -22,6 +22,22 @@ import Injector from './core/injection/injector';
  */
 import Config from './core/config';
 
+export {
+    Inject,
+    Model,
+    Prop,
+    Emit,
+    Provide,
+    Watch,
+    Component,
+    registerHooks,
+    Injectable,
+    VueComponent,
+    Vue,
+    StaticInjector,
+    Injector
+};
+
 const Velay = {
     Inject,
     Model,
