@@ -25,53 +25,48 @@ function getComponentName(options: IComponentOptions | VueClass<Vue>, component?
     return constructorName || `VueComponent${componentId++}`;
 }
 
-function injectService(Component: TConstructor, options: any) {
-    const beforeCreate = options.beforeCreate || noop;
-    options.beforeCreate = function() {
-        const instance = new Component();
-        const vueInstance = new Vue();
-        const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
-        const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
-        paramKeys.forEach(key => {
-            this[key] = instance[key];
-        });
-        beforeCreate.call(this);
-    };
-    return options;
+function injectService(Component: TConstructor) {
+    const instance = new Component();
+    const vueInstance = new Vue();
+    Vue.mixin({
+        beforeCreate() {
+            const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
+            const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
+            paramKeys.forEach(key => {
+                // auto injected services must be functions
+                if (typeof instance[key] === 'function') {
+                    (this as any)[key] = instance[key];
+                }
+            });
+        }
+    });
+}
+
+function assembleComponent(Component: VueClass<Vue>, options: IComponentOptions) {
+    const name = getComponentName(options, Component);
+    const target = getInjectedConstructor(Component);
+    if (!target) {
+        throw new Error(`${Component.name} dependency injection failed`);
+    }
+    (target as any).__decorators__ = (options as any).__decorators__;
+    injectService(target);
+    return reactiveComponent(name, componentFactory(target as any, { ...options, name }));
 }
 
 function Component<V extends Vue>(options: IComponentOptions & ThisType<V>): <VC extends VueClass<V>>(target: VC) => VC;
 function Component<VC extends VueClass<Vue>>(target: VC): VC;
 function Component(options: IComponentOptions | VueClass<Vue>): any {
-    const originalOptions = typeof options === 'function' ? (options as any).options : options;
-    const combineOptions = {
-        ...originalOptions,
-        data: (vm: Vue) => collectData(vm, originalOptions.data),
-        _Ctor: {}
-    };
+    // const originalOptions = typeof options === 'function' ? (options as any).options : options;
+    // const combineOptions = {
+    //     ...originalOptions,
+    //     // data: (vm: Vue) => collectData(vm, originalOptions.data),
+    //     _Ctor: {}
+    // };
     if (typeof options === 'function') {
-        const name = getComponentName(options);
-        const target = getInjectedConstructor(options);
-        if (!target) {
-            throw new Error(`${name} dependency injection failed`);
-        }
-        (target as any).__decorators__ = (options as any).__decorators__;
-        return reactiveComponent(
-            name,
-            componentFactory(target as any, injectService(target, { ...combineOptions, name }))
-        );
+        return assembleComponent(options, { _Ctor: {} } as any);
     }
     return function(Component: VueClass<Vue>) {
-        const name = getComponentName(options, Component);
-        const target = getInjectedConstructor(Component);
-        if (!target) {
-            throw new Error(`${Component.name} dependency injection failed`);
-        }
-        (target as any).__decorators__ = (Component as any).__decorators__;
-        return reactiveComponent(
-            name,
-            componentFactory(target as any, injectService(target, { ...combineOptions, name }))
-        );
+        return assembleComponent(Component, { ...options, _Ctor: {} } as any);
     };
 }
 
