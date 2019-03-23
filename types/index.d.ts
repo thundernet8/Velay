@@ -2,8 +2,10 @@ import RawVue, { VueConstructor, VNode, ComponentOptions, PropOptions, WatchOpti
 import { InjectKey } from 'vue/types/options';
 import { InternalJSX } from './jsx';
 import { TConstructor, InjectableOptions, ProviderRecord } from './internal';
+import './vue';
 
 type VueClass<V> = { new (...args: any[]): V & RawVue } & typeof RawVue;
+type BaseKV = { [key: string]: any };
 
 export = Velay;
 
@@ -100,12 +102,12 @@ declare namespace Velay {
 
     export function Component<V extends RawVue>(
         options: ComponentOptions<V> & ThisType<V>
-    ): <VC extends VueClass<V>>(target: VC) => VC;
-    export function Component<VC extends VueClass<RawVue>>(target: VC): VC;
+    ): <VC extends VueClass<V>>(target: any) => VC;
+    export function Component<VC extends VueClass<RawVue>>(target: any): VC;
 
     export function registerHooks(keys: string[]): void;
 
-    export function Injectable(options: InjectableOptions): (target: any) => any;
+    export function Injectable(options?: InjectableOptions): (target: any) => any;
     export function Injectable(target: any): any;
 
     export class StaticInjector {
@@ -136,18 +138,20 @@ declare namespace Velay {
         toString(): string;
     }
 
-    export interface VueComponent<T> extends VueComponentLifeCycle<T> {
+    export interface VueComponent<T extends BaseKV = {}> extends VueComponentLifeCycle<T> {
         $parent: RawVue;
         $children: RawVue[];
     }
 
-    export class VueComponent<T> extends RawVue {
+    export class VueComponent<T extends BaseKV = {}> extends RawVue {
         _props_: InternalJSX.ElementAttrs<T>;
 
         [propOrDataName: string]: any;
     }
 
-    export const Vue: VueConstructor;
+    export const Vue: VueConstructor & {
+        new (...args: any[]): RawVue;
+    };
 
     export const version: string;
 

@@ -1,6 +1,7 @@
 *
 !/dist/**/*
 !/lib/**/*
+!/types/**/*
 !/README.md
 !/package*.json
 !/tsconfig.json
