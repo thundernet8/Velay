@@ -52,7 +52,11 @@ export default class Injector {
         }
 
         try {
-            return this._resolveToken<T>(record);
+            const value = this._resolveToken<T>(record);
+            if (record.value === CIRCULAR) {
+                record.value = EMPTY;
+            }
+            return value;
         } catch (e) {
             if (!(e instanceof Error)) {
                 // tslint:disable-next-line:no-ex-assign
