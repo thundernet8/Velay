@@ -100,10 +100,8 @@ declare namespace Velay {
 
     export function Emit(event?: string): MethodDecorator;
 
-    export function Component<V extends RawVue>(
-        options: ComponentOptions<V> & ThisType<V>
-    ): <VC extends VueClass<V>>(target: any) => VC;
-    export function Component<VC extends VueClass<RawVue>>(target: any): VC;
+    export function Component<V extends RawVue>(options: ComponentOptions<V> & ThisType<V>): (target: any) => any;
+    export function Component(target: any): any;
 
     export function registerHooks(keys: string[]): void;
 
