@@ -4,16 +4,15 @@
     "description": "vue page and fragments",
     "main": "lib/cjs/index.js",
     "module": "lib/esm/index.js",
-    "types": "lib/types/index.d.ts",
-    "typings": "lib/types/index.d.ts",
+    "types": "types/index.d.ts",
+    "typings": "types/index.d.ts",
     "repository": "git@github.com:thundernet8/Velay.git",
     "author": "thundernet8 <wuxueqian2010@hotmail.com>",
     "license": "MIT",
     "keywords": [
         "vue",
-        "vuex",
-        "bigpipe",
-        "pagelet",
+        "mobx",
+        "oop",
         "typescript"
     ],
     "bugs": {
@@ -21,9 +20,9 @@
     },
     "homepage": "https://github.com/thundernet8/Velay#readme",
     "scripts": {
-        "clean": "rimraf dist",
+        "clean": "rimraf lib",
         "prebuild": "npm run clean",
-        "build": "rollup -c && cp -R src/types lib/",
+        "build": "rollup -c && cp -R src/types ./",
         "prepublishOnly": "npm run build",
         "docs:build": "vuepress build docs",
         "docs:serve": "vuepress dev docs",
