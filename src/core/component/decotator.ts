@@ -4,10 +4,14 @@ import { VueClass } from '../../lib/vue-class-component/declarations';
 import { componentFactory, $internalHooks } from '../../lib/vue-class-component/component';
 import { getInjectedConstructor } from '../utils/reflection';
 import { collectData, reactiveComponent } from '../store/mobx';
+import { TConstructor } from '../../types/internal';
 
 interface IComponentOptions extends ComponentOptions<Vue> {}
 
 let componentId = 1;
+
+// tslint:disable-next-line:no-empty
+const noop = () => {};
 
 function getComponentName(options: IComponentOptions | VueClass<Vue>, component?: VueClass<Vue>) {
     if (typeof options === 'object' && options.name) {
@@ -19,6 +23,21 @@ function getComponentName(options: IComponentOptions | VueClass<Vue>, component?
     let klass: VueClass<Vue> = (component || options) as VueClass<Vue>;
     const constructorName = klass.name || (klass.constructor && Component.constructor.name);
     return constructorName || `VueComponent${componentId++}`;
+}
+
+function injectService(Component: TConstructor, options: any) {
+    const beforeCreate = options.beforeCreate || noop;
+    options.beforeCreate = function() {
+        const instance = new Component();
+        const vueInstance = new Vue();
+        const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
+        const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
+        paramKeys.forEach(key => {
+            this[key] = instance[key];
+        });
+        beforeCreate.call(this);
+    };
+    return options;
 }
 
 function Component<V extends Vue>(options: IComponentOptions & ThisType<V>): <VC extends VueClass<V>>(target: VC) => VC;
@@ -37,7 +56,10 @@ function Component(options: IComponentOptions | VueClass<Vue>): any {
             throw new Error(`${name} dependency injection failed`);
         }
         (target as any).__decorators__ = (options as any).__decorators__;
-        return reactiveComponent(name, componentFactory(target as any, { ...combineOptions, name }));
+        return reactiveComponent(
+            name,
+            componentFactory(target as any, injectService(target, { ...combineOptions, name }))
+        );
     }
     return function(Component: VueClass<Vue>) {
         const name = getComponentName(options, Component);
@@ -46,7 +68,10 @@ function Component(options: IComponentOptions | VueClass<Vue>): any {
             throw new Error(`${Component.name} dependency injection failed`);
         }
         (target as any).__decorators__ = (Component as any).__decorators__;
-        return reactiveComponent(name, componentFactory(target as any, { ...combineOptions, name }));
+        return reactiveComponent(
+            name,
+            componentFactory(target as any, injectService(target, { ...combineOptions, name }))
+        );
     };
 }
 
