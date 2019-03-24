@@ -1,11 +1,10 @@
 import RawVue, { VueConstructor, VNode, ComponentOptions, PropOptions, WatchOptions } from 'vue';
 import { InjectKey } from 'vue/types/options';
 import { InternalJSX } from './jsx';
-import { TConstructor, InjectableOptions, ProviderRecord } from './internal';
+import { TConstructor, InjectableOptions, ProviderRecord, BaseKV } from './internal';
 import './vue';
 
 type VueClass<V> = { new (...args: any[]): V & RawVue } & typeof RawVue;
-type BaseKV = { [key: string]: any };
 
 export = Velay;
 
@@ -105,6 +104,14 @@ declare namespace Velay {
 
     export function registerHooks(keys: string[]): void;
 
+    export function State(target: StoreService, key: string): void;
+
+    export function Getter(target: StoreService, key: string, descriptor?: any): void;
+
+    export function Action(target: StoreService, key: string, descriptor?: any): void;
+
+    export function Mutation(target: StoreService, key: string, descriptor?: any): void;
+
     export function Injectable(options?: InjectableOptions): (target: any) => any;
     export function Injectable(target: any): any;
 
@@ -160,4 +167,6 @@ declare namespace Velay {
     export const config: VelayConfig;
 
     export const providers: ProviderRecord[];
+
+    export class StoreService {}
 }

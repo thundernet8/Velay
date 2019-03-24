@@ -5,6 +5,7 @@ import { VueClass } from '../../lib/vue-class-component/declarations';
 import { componentFactory, $internalHooks } from '../../lib/vue-class-component/component';
 import { getInjectedConstructor } from '../utils/reflection';
 import { collectData, reactiveComponent } from '../store/mobx';
+import { handleStoreServiceBinding } from '../store/vuex';
 import { TConstructor } from '../../types/internal';
 
 interface IComponentOptions extends ComponentOptions<Vue> {}
@@ -36,6 +37,7 @@ function injectService(Component: TConstructor) {
             paramKeys.forEach(key => {
                 // auto injected services must be functions or observable mobx object
                 if (typeof instance[key] === 'function' || isObservable(instance[key])) {
+                    handleStoreServiceBinding(key, instance[key], this);
                     (this as any)[key] = instance[key];
                 }
             });

@@ -9,3 +9,7 @@ export interface ProviderRecord {
 export interface InjectableOptions {
     cacheable: boolean;
 }
+
+export interface BaseKV {
+    [key: string]: any;
+}

@@ -1,5 +1,6 @@
 // TODO env and log level
 import Config from '../config';
+import VelayError from '../helper/velayError';
 
 export default class Debugger {
     private static get _prefixedMsg() {
@@ -29,5 +30,9 @@ export default class Debugger {
 
     static error(...args: any[]) {
         return Debugger.output('error', args);
+    }
+
+    static throw(msg?: string | Error) {
+        throw new VelayError(typeof msg === 'object' ? msg.message : msg);
     }
 }

@@ -1,10 +1,14 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
 
 /**
  * Decorators
  */
 import { Inject, Model, Prop, Emit, Provide, Watch, Component, registerHooks } from './core/component/decotator';
 import Injectable from './core/injection/injectable';
+import { State, Getter, Action, Mutation } from './core/store/decorator';
 
 /**
  * Base Component Class
@@ -22,6 +26,11 @@ import Injector from './core/injection/injector';
  */
 import Config from './core/config';
 
+/**
+ * Store Service
+ */
+import StoreService from './core/store/vuex';
+
 export {
     Inject,
     Model,
@@ -31,11 +40,16 @@ export {
     Watch,
     Component,
     registerHooks,
+    State,
+    Getter,
+    Action,
+    Mutation,
     Injectable,
     VueComponent,
     Vue,
     StaticInjector,
-    Injector
+    Injector,
+    StoreService
 };
 
 const Velay = {
@@ -47,6 +61,10 @@ const Velay = {
     Watch,
     Component,
     registerHooks,
+    State,
+    Getter,
+    Action,
+    Mutation,
     Injectable,
     VueComponent,
     Vue,
@@ -54,7 +72,8 @@ const Velay = {
     Injector,
     version: '',
     config: {},
-    providers: []
+    providers: [],
+    StoreService
 };
 
 Object.defineProperty(Velay, 'config', {
