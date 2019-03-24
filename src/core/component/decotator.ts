@@ -1,4 +1,5 @@
 import Vue, { ComponentOptions } from 'vue';
+import { isObservable } from 'mobx';
 import { Inject, Model, Prop, Emit, Provide, Watch } from 'vue-property-decorator';
 import { VueClass } from '../../lib/vue-class-component/declarations';
 import { componentFactory, $internalHooks } from '../../lib/vue-class-component/component';
@@ -33,8 +34,8 @@ function injectService(Component: TConstructor) {
             const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
             const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
             paramKeys.forEach(key => {
-                // auto injected services must be functions
-                if (typeof instance[key] === 'function') {
+                // auto injected services must be functions or observable mobx object
+                if (typeof instance[key] === 'function' || isObservable(instance[key])) {
                     (this as any)[key] = instance[key];
                 }
             });
