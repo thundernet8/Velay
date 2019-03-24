@@ -1,4 +1,5 @@
 import Vue, { ComponentOptions } from 'vue';
+import { isObservable } from 'mobx';
 import { copyReflectionMetadata, reflectionIsSupported } from './reflect';
 import { VueClass, DecoratedClass } from './declarations';
 import { collectDataFromConstructor } from './data';

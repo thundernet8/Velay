@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { isObservable } from 'mobx';
 import { VueClass } from './declarations';
 import { warn } from './util';
 
@@ -38,7 +39,7 @@ export function collectDataFromConstructor(vm: Vue, Component: VueClass<Vue>) {
     // create plain data object
     const plainData = {};
     Object.keys(data).forEach(key => {
-        if ((data as any)[key] !== undefined) {
+        if ((data as any)[key] !== undefined && !isObservable((data as any)[key])) {
             (plainData as any)[key] = (data as any)[key];
         }
     });
