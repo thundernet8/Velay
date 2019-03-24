@@ -15,6 +15,11 @@ function collectDecorator(decorator: string, target: any, key: string, descripto
     // if (typeof index !== 'number') {
     //     index = undefined;
     // }
+    console.log('collectDecorator', {
+        type: decorator,
+        key,
+        descriptor
+    });
     Ctor.__decorators__.push({
         type: decorator,
         key,

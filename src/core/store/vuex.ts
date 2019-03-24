@@ -26,6 +26,7 @@ export function handleStoreServiceBinding(key: string, value: StoreService, vm: 
     if (!(value instanceof StoreService)) {
         return;
     }
+    console.log('handleStoreServiceBinding', key, value);
     if (!value.__decorators__ || value.__decorators__.length === 0) {
         return;
     }
