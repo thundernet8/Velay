@@ -5,7 +5,7 @@ import { VueClass } from '../../lib/vue-class-component/declarations';
 import { componentFactory, $internalHooks } from '../../lib/vue-class-component/component';
 import { getInjectedConstructor } from '../utils/reflection';
 import { collectData, reactiveComponent } from '../store/mobx';
-import { handleStoreServiceBinding } from '../store/vuex';
+import { handleStoreServiceBinding, isStoreService } from '../store/vuex';
 import { TConstructor } from '../../types/internal';
 
 interface IComponentOptions extends ComponentOptions<Vue> {}
@@ -15,7 +15,7 @@ let componentId = 1;
 // tslint:disable-next-line:no-empty
 const noop = () => {};
 
-function getComponentName(options: IComponentOptions | VueClass<Vue>, component?: VueClass<Vue>) {
+function getComponentNameAndId(options: IComponentOptions | VueClass<Vue>, component?: VueClass<Vue>) {
     if (typeof options === 'object' && options.name) {
         return options.name;
     }
@@ -24,19 +24,28 @@ function getComponentName(options: IComponentOptions | VueClass<Vue>, component?
     }
     let klass: VueClass<Vue> = (component || options) as VueClass<Vue>;
     const constructorName = klass.name || (klass.constructor && Component.constructor.name);
-    return constructorName || `VueComponent${componentId++}`;
+    const id = componentId++;
+    return { name: constructorName || `VueComponent${componentId++}`, id };
 }
 
-function injectService(Component: TConstructor) {
+function injectService(Component: TConstructor, id: number) {
     const instance = new Component();
     const vueInstance = new Vue();
     Vue.mixin({
         beforeCreate() {
+            if ((this.$options as any)._vid !== id) {
+                return;
+            }
             const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
             const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
+            console.log('paramKeys');
             paramKeys.forEach(key => {
                 // auto injected services must be functions or observable mobx object
-                if (typeof instance[key] === 'function' || isObservable(instance[key])) {
+                if (
+                    typeof instance[key] === 'function' ||
+                    isObservable(instance[key]) ||
+                    isStoreService(instance[key])
+                ) {
                     handleStoreServiceBinding(key, instance[key], this);
                     (this as any)[key] = instance[key];
                 }
@@ -46,14 +55,14 @@ function injectService(Component: TConstructor) {
 }
 
 function assembleComponent(Component: VueClass<Vue>, options: IComponentOptions) {
-    const name = getComponentName(options, Component);
+    const { name, id } = getComponentNameAndId(options, Component);
     const target = getInjectedConstructor(Component);
     if (!target) {
         throw new Error(`${Component.name} dependency injection failed`);
     }
     (target as any).__decorators__ = (options as any).__decorators__;
-    injectService(target);
-    return reactiveComponent(name, componentFactory(target as any, { ...options, name }));
+    injectService(target, id);
+    return reactiveComponent(name, componentFactory(target as any, { ...options, name }, id));
 }
 
 function Component<V extends Vue>(options: IComponentOptions & ThisType<V>): <VC extends VueClass<V>>(target: VC) => VC;

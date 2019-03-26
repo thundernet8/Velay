@@ -22,7 +22,11 @@ export const $internalHooks = [
     'serverPrefetch' // 2.6
 ];
 
-export function componentFactory(Component: VueClass<Vue>, options: ComponentOptions<Vue> = {}): VueClass<Vue> {
+export function componentFactory(
+    Component: VueClass<Vue>,
+    options: ComponentOptions<Vue> = {},
+    id: number
+): VueClass<Vue> {
     options.name = options.name || (Component as any)._componentTag || (Component as any).name;
     // prototype props.
     const proto = Component.prototype;
@@ -75,7 +79,7 @@ export function componentFactory(Component: VueClass<Vue>, options: ComponentOpt
     // find super
     const superProto = Object.getPrototypeOf(Component.prototype);
     const Super = superProto instanceof Vue ? (superProto.constructor as VueClass<Vue>) : Vue;
-    const Extended = Super.extend(options);
+    const Extended = Super.extend(Object.assign({}, options, { _vid: id }));
 
     forwardStaticMembers(Extended, Component, Super);
 

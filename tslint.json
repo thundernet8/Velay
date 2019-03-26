@@ -17,7 +17,13 @@
             }
         ],
         "radix": false,
-        "ter-indent": [true, 4],
+        "ter-indent": [
+            true,
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
         "semicolon": [true, "always"],
         "space-before-function-paren": false
     },

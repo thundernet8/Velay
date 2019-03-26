@@ -8,10 +8,10 @@ function onlyForStoreService(decorator: string, target: any) {
 }
 
 function collectDecorator(decorator: string, target: any, key: string, descriptor?: any) {
-    const Ctor = typeof target === 'function' ? (target as StoreService) : (target.constructor as StoreService);
-    if (!Ctor.__decorators__) {
-        Ctor.__decorators__ = [];
-    }
+    // const Ctor = typeof target === 'function' ? (target as StoreService) : (target.constructor as StoreService);
+    // if (!StoreService.__local_decorators__) {
+    //     Ctor.__local_decorators__ = [];
+    // }
     // if (typeof index !== 'number') {
     //     index = undefined;
     // }
@@ -20,7 +20,7 @@ function collectDecorator(decorator: string, target: any, key: string, descripto
         key,
         descriptor
     });
-    Ctor.__decorators__.push({
+    StoreService.__local_decorators__.push({
         type: decorator,
         key,
         descriptor
