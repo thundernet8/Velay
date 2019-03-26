@@ -2,6 +2,7 @@ import Vue, { ComponentOptions } from 'vue';
 import { mapState, mapGetters, mapActions, mapMutations, Store } from 'vuex';
 import { BaseKV } from '../../types/internal';
 import { DecoratedClass } from '../../lib/vue-class-component/declarations';
+import { isFunction } from '../utils/index';
 
 const MapHelperMap: BaseKV = {
     State: mapState,
@@ -23,26 +24,33 @@ export default class StoreService {
 
     public _store: Store<any> | undefined;
 
-    public _storeNamespace: string;
+    public _storeNamespace: string | undefined;
 
     constructor() {
-        this._storeNamespace = `StoreServiceNamespace${_uid++}`;
+        const uid = _uid++;
+        Object.defineProperty(this, '_storeNamespace', {
+            enumerable: false,
+            configurable: false,
+            get() {
+                return `StoreServiceNamespace${uid}`;
+            }
+        });
     }
 }
 
-export function handleStoreServiceBinding(key: string, store: StoreService, vm: Vue) {
-    if (!isStoreService(store)) {
+export function handleStoreServiceBinding(service: StoreService, vm: Vue) {
+    if (!isStoreService(service)) {
         return;
     }
-    if (store._storeBinded) {
+    if (service._storeBinded) {
         return;
     }
-    store._storeBinded = true;
-    console.log('handleStoreServiceBinding', key, store);
+    service._storeBinded = true;
+
     if (!StoreService.__local_decorators__ || StoreService.__local_decorators__.length === 0) {
         return;
     }
-    const Ctor = typeof vm === 'function' ? (vm as DecoratedClass) : (vm.constructor as DecoratedClass);
+    // const Ctor = typeof vm === 'function' ? (vm as DecoratedClass) : (vm.constructor as DecoratedClass);
     // if (!Ctor.__decorators__) {
     //     Ctor.__decorators__ = [];
     // }
@@ -55,71 +63,68 @@ export function handleStoreServiceBinding(key: string, store: StoreService, vm: 
     //     this.$store = options.parent.$store;
     //   }
 
-    if (!Ctor.$store) {
-        Ctor.$store = new Store({
+    let vuexStore = (vm as any).$velayStore;
+    if (!vuexStore) {
+        vuexStore = (vm as any).$velayStore = new Store({
             state: {}
         });
     }
 
-    store._store = Ctor.$store;
-    // if (typeof index !== 'number') {
-    //     index = undefined;
-    // }
-    // TODO1
+    service._store = vuexStore;
+
     // collect state, getters, actions, mutations to a storeoptions object
     const state: BaseKV = {};
     const getters: BaseKV = {};
     const mutations: BaseKV = {};
     StoreService.__local_decorators__.forEach(decoratorDesc => {
-        const key = decoratorDesc.key;
+        const { key, descriptor } = decoratorDesc;
         switch (decoratorDesc.type) {
             case 'State':
-                state[key] = (store as any)[key];
+                state[key] = (service as any)[key];
                 mutations[`_${key}_mutation`] = (state: BaseKV, payload?: any) => {
                     state[key] = payload;
                 };
-                Object.defineProperty(store, key, {
+                Object.defineProperty(service, key, {
                     get() {
-                        return Ctor.$store.state[store._storeNamespace][key];
+                        return vuexStore.state[service._storeNamespace!][key];
                     },
                     set(value) {
-                        return Ctor.$store.commit(`${store._storeNamespace}/_${key}_mutation`, value);
+                        return vuexStore.commit(`${service._storeNamespace}/_${key}_mutation`, value);
                     }
                 });
                 break;
             case 'Getter':
+                if (descriptor) {
+                    const method = descriptor.get;
+                    if (isFunction(method)) {
+                        getters[key] = () => method.call(service);
+                        Object.defineProperty(service, key, {
+                            get() {
+                                return vuexStore.getters[`${service._storeNamespace}/${key}`];
+                            }
+                        });
+                    }
+                }
                 break;
             case 'Action':
+                // no need
                 break;
             case 'Mutation':
+                // no need
                 break;
             default:
                 return;
         }
     });
 
-    // TODO2
-    Ctor.$store!.registerModule(store._storeNamespace, {
+    // register vuex module for this dataservice
+    vuexStore.registerModule(service._storeNamespace, {
         namespaced: true,
         state,
         getters,
         actions: {},
         mutations
     });
-
-    // TODO3
-    // mapstate, methods to storeservice
-
-    // store.__decorators__.forEach(decoratorDesc => {
-    //     let bindTo = decoratorDesc.type === 'State' || decoratorDesc.type === 'Getter' ? 'computed' : 'methods';
-    //     Ctor.__decorators__!.push((options: any) => {
-    //         if (!options[bindTo]) {
-    //             options[bindTo] = {};
-    //         }
-    //         const mapObject = { [decoratorDesc.key]: key };
-    //         options[bindTo][key] = MapHelperMap[decoratorDesc.type](store._storeNamespace, mapObject)[key];
-    //     });
-    // });
 }
 
 export function isStoreService(instance?: any) {

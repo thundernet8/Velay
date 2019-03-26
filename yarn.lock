@@ -5501,11 +5501,6 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@
   dependencies:
     minimist "0.0.8"
 
-mobx@^4.9.3:
-  version "4.9.3"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-4.9.3.tgz#24294ff8ba34aeb03f1f02d8dd4984a1e55707bb"
-  integrity sha512-+CwJp0YgEz0Q3U7jQTvLT/ikqmFD7rPMs5oLCZfCMhQp35lnel+QLyfddTm6lFt0OvkMeXoToXmCkkFeU/eZPQ==
-
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"

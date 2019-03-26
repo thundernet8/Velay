@@ -1,10 +1,8 @@
 import Vue, { ComponentOptions } from 'vue';
-import { isObservable } from 'mobx';
 import { Inject, Model, Prop, Emit, Provide, Watch } from 'vue-property-decorator';
 import { VueClass } from '../../lib/vue-class-component/declarations';
 import { componentFactory, $internalHooks } from '../../lib/vue-class-component/component';
 import { getInjectedConstructor } from '../utils/reflection';
-import { collectData, reactiveComponent } from '../store/mobx';
 import { handleStoreServiceBinding, isStoreService } from '../store/vuex';
 import { TConstructor } from '../../types/internal';
 
@@ -38,15 +36,10 @@ function injectService(Component: TConstructor, id: number) {
             }
             const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
             const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
-            console.log('paramKeys');
             paramKeys.forEach(key => {
-                // auto injected services must be functions or observable mobx object
-                if (
-                    typeof instance[key] === 'function' ||
-                    isObservable(instance[key]) ||
-                    isStoreService(instance[key])
-                ) {
-                    handleStoreServiceBinding(key, instance[key], this);
+                // auto injected services must be functions or customized store service
+                if (typeof instance[key] === 'function' || isStoreService(instance[key])) {
+                    handleStoreServiceBinding(instance[key], this);
                     (this as any)[key] = instance[key];
                 }
             });
@@ -62,7 +55,7 @@ function assembleComponent(Component: VueClass<Vue>, options: IComponentOptions)
     }
     (target as any).__decorators__ = (options as any).__decorators__;
     injectService(target, id);
-    return reactiveComponent(name, componentFactory(target as any, { ...options, name }, id));
+    return componentFactory(target as any, { ...options, name }, id);
 }
 
 function Component<V extends Vue>(options: IComponentOptions & ThisType<V>): <VC extends VueClass<V>>(target: VC) => VC;
