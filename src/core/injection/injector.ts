@@ -2,6 +2,7 @@ import { TConstructor, ProviderRecord } from '../../types/internal';
 import { INJECTABLE_FLAG, CIRCULAR, EMPTY } from './constant';
 import Debugger from '../utils/debugger';
 import VelayError from '../helper/velayError';
+import { Enumerable } from '../utils/index';
 
 export default class Injector {
     private readonly _records: Map<any, ProviderRecord>;
@@ -73,6 +74,7 @@ export default class Injector {
         }
     }
 
+    @Enumerable(false)
     _resolveToken<T>(record: ProviderRecord): T {
         const fn = record.token;
         let value = record.value;

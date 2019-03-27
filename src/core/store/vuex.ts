@@ -1,15 +1,7 @@
-import Vue, { ComponentOptions } from 'vue';
-import { mapState, mapGetters, mapActions, mapMutations, Store } from 'vuex';
+import Vue from 'vue';
+import { Store } from 'vuex';
 import { BaseKV } from '../../types/internal';
-import { DecoratedClass } from '../../lib/vue-class-component/declarations';
 import { isFunction } from '../utils/index';
-
-const MapHelperMap: BaseKV = {
-    State: mapState,
-    Getter: mapGetters,
-    Action: mapActions,
-    Mutation: mapMutations
-};
 
 let _uid = 1;
 
@@ -32,7 +24,7 @@ export default class StoreService {
             enumerable: false,
             configurable: false,
             get() {
-                return `StoreServiceNamespace${uid}`;
+                return `${this.constructor.name || 'StoreService'}Namespace${uid}`;
             }
         });
     }
@@ -50,18 +42,6 @@ export function handleStoreServiceBinding(service: StoreService, vm: Vue) {
     if (!StoreService.__local_decorators__ || StoreService.__local_decorators__.length === 0) {
         return;
     }
-    // const Ctor = typeof vm === 'function' ? (vm as DecoratedClass) : (vm.constructor as DecoratedClass);
-    // if (!Ctor.__decorators__) {
-    //     Ctor.__decorators__ = [];
-    // }
-
-    // if (options.store) {
-    //     this.$store = typeof options.store === 'function'
-    //       ? options.store()
-    //       : options.store;
-    //   } else if (options.parent && options.parent.$store) {
-    //     this.$store = options.parent.$store;
-    //   }
 
     let vuexStore = (vm as any).$velayStore;
     if (!vuexStore) {

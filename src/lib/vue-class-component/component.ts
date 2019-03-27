@@ -3,6 +3,7 @@ import { copyReflectionMetadata, reflectionIsSupported } from './reflect';
 import { VueClass, DecoratedClass } from './declarations';
 import { collectDataFromConstructor } from './data';
 import { hasProto, isPrimitive, warn } from './util';
+import { isFunction } from '../../core/utils/index';
 
 export const $internalHooks = [
     'data',
@@ -24,7 +25,7 @@ export const $internalHooks = [
 export function componentFactory(
     Component: VueClass<Vue>,
     options: ComponentOptions<Vue> = {},
-    id: number
+    id?: number
 ): VueClass<Vue> {
     options.name = options.name || (Component as any)._componentTag || (Component as any).name;
     // prototype props.
@@ -42,7 +43,7 @@ export function componentFactory(
         const descriptor = Object.getOwnPropertyDescriptor(proto, key)!;
         if (descriptor.value !== void 0) {
             // methods
-            if (typeof descriptor.value === 'function') {
+            if (isFunction(descriptor.value)) {
                 (options.methods || (options.methods = {}))[key] = descriptor.value;
             } else {
                 // typescript decorated data

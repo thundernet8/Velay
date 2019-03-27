@@ -1,13 +1,14 @@
 import { TConstructor } from '../../types/internal';
 import Debugger from './debugger';
 import StaticInjector from '../injection/staticInjector';
+import { isFunction } from '../utils/index';
 
 export function getInjectedConstructor(target: TConstructor): TConstructor | null {
     const paramTypes = Reflect.getMetadata('design:paramtypes', target) || [];
     const params: any[] = [];
     for (let i = 0; i < paramTypes.length; i++) {
         const paramType = paramTypes[i];
-        if (typeof paramType !== 'function') {
+        if (!isFunction(paramType)) {
             Debugger.warn(`pamameter ${i + 1} of ${target.name} is not a constructor`);
             return null;
         }

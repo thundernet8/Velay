@@ -9,14 +9,6 @@ function onlyForStoreService(decorator: string, target: any) {
 }
 
 function collectDecorator(decorator: string, target: any, key: string, descriptor?: any) {
-    // const Ctor = typeof target === 'function' ? (target as StoreService) : (target.constructor as StoreService);
-    // if (!StoreService.__local_decorators__) {
-    //     Ctor.__local_decorators__ = [];
-    // }
-    // if (typeof index !== 'number') {
-    //     index = undefined;
-    // }
-
     StoreService.__local_decorators__.push({
         type: decorator,
         key,
@@ -28,7 +20,9 @@ function collectDecorator(decorator: string, target: any, key: string, descripto
 export function State(target: StoreService, key: string, descriptor?: any) {
     // property decorator has no descriptor
     if (descriptor) {
-        Debugger.throw('`State` decorator can only be used on a class property');
+        Debugger.throw(
+            `State decorator can only be used on a class property, target: ${target.constructor.name}, key: ${key}`
+        );
     }
     onlyForStoreService('State', target);
     collectDecorator('State', target, key);
@@ -36,7 +30,11 @@ export function State(target: StoreService, key: string, descriptor?: any) {
 
 export function Getter(target: StoreService, key: string, descriptor?: any) {
     if (!descriptor || !isFunction(descriptor.get)) {
-        Debugger.throw('`Getter` decorator can only be used on a get method of a class');
+        Debugger.throw(
+            `Getter decorator can only be used on a get method of a class, target: ${
+                target.constructor.name
+            }, key: ${key}`
+        );
     }
     onlyForStoreService('Getter', target);
     collectDecorator('Getter', target, key, descriptor);
@@ -44,7 +42,9 @@ export function Getter(target: StoreService, key: string, descriptor?: any) {
 
 export function Action(target: StoreService, key: string, descriptor?: any) {
     if (!descriptor || !isFunction(descriptor.value)) {
-        Debugger.throw('`Action` decorator can only be used on a method of a class');
+        Debugger.throw(
+            `Action decorator can only be used on a method of a class, target: ${target.constructor.name}, key: ${key}`
+        );
     }
     onlyForStoreService('Action', target);
     collectDecorator('Action', target, key, descriptor);
@@ -52,7 +52,11 @@ export function Action(target: StoreService, key: string, descriptor?: any) {
 
 export function Mutation(target: StoreService, key: string, descriptor?: any) {
     if (!descriptor || !isFunction(descriptor.value)) {
-        Debugger.throw('`Mutation` decorator can only be used on a method of a class');
+        Debugger.throw(
+            `Mutation decorator can only be used on a method of a class, target: ${
+                target.constructor.name
+            }, key: ${key}`
+        );
     }
     onlyForStoreService('Mutation', target);
     collectDecorator('Mutation', target, key, descriptor);
