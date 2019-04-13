@@ -11,7 +11,7 @@
     "license": "MIT",
     "keywords": [
         "vue",
-        "mobx",
+        "vuex",
         "oop",
         "typescript"
     ],
