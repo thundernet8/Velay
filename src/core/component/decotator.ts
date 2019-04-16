@@ -54,7 +54,7 @@ function assembleComponent(Component: VueClass<Vue>, options: IComponentOptions)
     if (!target) {
         throw new Error(`${Component.name} dependency injection failed`);
     }
-    (target as any).__decorators__ = (options as any).__decorators__;
+    (target as any).__decorators__ = (Component as any).__decorators__;
     injectService(target, id);
     return componentFactory(target as any, { ...options, name }, id);
 }
