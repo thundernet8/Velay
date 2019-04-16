@@ -16,3 +16,7 @@ Write vue in oop
     }
 }
 ```
+
+## Augmenting Vue Types
+
+[https://vuejs.org/v2/guide/typescript.html#Augmenting-Types-for-Use-with-Plugins](https://vuejs.org/v2/guide/typescript.html#Augmenting-Types-for-Use-with-Plugins)

@@ -2,7 +2,6 @@ import RawVue, { VueConstructor, VNode, ComponentOptions, PropOptions, WatchOpti
 import { InjectKey } from 'vue/types/options';
 import { InternalJSX } from './jsx';
 import { TConstructor, InjectableOptions, ProviderRecord, BaseKV } from './internal';
-import './vue';
 
 type VueClass<V> = { new (...args: any[]): V & RawVue } & typeof RawVue;
 
