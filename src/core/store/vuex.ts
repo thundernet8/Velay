@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { Store } from 'vuex';
 import { BaseKV } from '../../types/internal';
 import { isFunction } from '../utils/index';
+import Debugger from '../utils/debugger';
 
 let _uid = 1;
 
@@ -94,6 +95,22 @@ export function handleStoreServiceBinding(service: StoreService, vm: Vue) {
                 break;
             default:
                 return;
+        }
+    });
+
+    // bind methods to instance
+    const proto = Object.getPrototypeOf(service);
+    if (proto.__proto__ !== StoreService.prototype) {
+        Debugger.warn(`It's not recommended for multiple inheritance of 'StoreService'`);
+    }
+    const descriptors = Object.getOwnPropertyDescriptors(proto);
+    Object.keys(descriptors).forEach(key => {
+        const descriptor = descriptors[key];
+        if (descriptor.value && isFunction(descriptor.value) && key !== 'constructor') {
+            Object.defineProperty(service, key, {
+                ...descriptor,
+                value: descriptor.value.bind(service)
+            });
         }
     });
 
