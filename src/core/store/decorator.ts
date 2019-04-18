@@ -9,7 +9,10 @@ function onlyForStoreService(decorator: string, target: any) {
 }
 
 function collectDecorator(decorator: string, target: any, key: string, descriptor?: any) {
-    StoreService.__local_decorators__.push({
+    if (!target.constructor) {
+        return;
+    }
+    target.constructor.__local_decorators__.push({
         type: decorator,
         key,
         descriptor
