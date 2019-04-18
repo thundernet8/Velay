@@ -1,0 +1,1 @@
+-   vue 共享\$velayStore 实例，组件创建时继承它

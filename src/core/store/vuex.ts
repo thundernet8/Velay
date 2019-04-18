@@ -11,7 +11,7 @@ let _uid = 1;
  */
 export default class StoreService {
     // tslint:disable-next-line:variable-name
-    public static __local_decorators__: { key: string; type: string; descriptor?: any }[] = [];
+    // public static __local_decorators__: { key: string; type: string; descriptor?: any }[] = [];
 
     public _storeBinded: boolean = false;
 
@@ -40,7 +40,9 @@ export function handleStoreServiceBinding(service: StoreService, vm: Vue) {
     }
     service._storeBinded = true;
 
-    if (!StoreService.__local_decorators__ || StoreService.__local_decorators__.length === 0) {
+    const constructor = service.constructor as any;
+
+    if (!constructor.__local_decorators__ || constructor.__local_decorators__.length === 0) {
         return;
     }
 
@@ -57,22 +59,24 @@ export function handleStoreServiceBinding(service: StoreService, vm: Vue) {
     const state: BaseKV = {};
     const getters: BaseKV = {};
     const mutations: BaseKV = {};
-    StoreService.__local_decorators__.forEach(decoratorDesc => {
+    constructor.__local_decorators__.forEach((decoratorDesc: { key?: any; descriptor?: any; type?: any }) => {
         const { key, descriptor } = decoratorDesc;
         switch (decoratorDesc.type) {
             case 'State':
-                state[key] = (service as any)[key];
-                mutations[`_${key}_mutation`] = (state: BaseKV, payload?: any) => {
-                    state[key] = payload;
-                };
-                Object.defineProperty(service, key, {
-                    get() {
-                        return vuexStore.state[service._storeNamespace!][key];
-                    },
-                    set(value) {
-                        return vuexStore.commit(`${service._storeNamespace}/_${key}_mutation`, value);
-                    }
-                });
+                if (state[key] === undefined) {
+                    state[key] = (service as any)[key];
+                    mutations[`_${key}_mutation`] = (state: BaseKV, payload?: any) => {
+                        state[key] = payload;
+                    };
+                    Object.defineProperty(service, key, {
+                        get() {
+                            return vuexStore.state[service._storeNamespace!][key];
+                        },
+                        set(value) {
+                            return vuexStore.commit(`${service._storeNamespace}/_${key}_mutation`, value);
+                        }
+                    });
+                }
                 break;
             case 'Getter':
                 if (descriptor) {
