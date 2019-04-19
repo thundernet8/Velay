@@ -10,6 +10,7 @@ import { isFunction } from '../utils/index';
 interface IComponentOptions extends ComponentOptions<Vue> {}
 
 let componentId = 1;
+export const componentInstanceMap: { [key: number]: any } = {};
 
 // tslint:disable-next-line:no-empty
 const noop = () => {};
@@ -28,24 +29,7 @@ function getComponentNameAndId(options: IComponentOptions | VueClass<Vue>, compo
 }
 
 function injectService(Component: TConstructor, id: number) {
-    const instance = new Component();
-    const vueInstance = new Vue();
-    Vue.mixin({
-        beforeCreate() {
-            if ((this.$options as any)._vid !== id) {
-                return;
-            }
-            const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
-            const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
-            paramKeys.forEach(key => {
-                // auto injected services must be functions or customized store service
-                if (isFunction(instance[key]) || isStoreService(instance[key])) {
-                    handleStoreServiceBinding(instance[key], this);
-                    (this as any)[key] = instance[key];
-                }
-            });
-        }
-    });
+    componentInstanceMap[id] = new Component();
 }
 
 function assembleComponent(Component: VueClass<Vue>, options: IComponentOptions) {

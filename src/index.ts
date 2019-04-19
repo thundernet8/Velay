@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import velayPlugin from './core/plugin';
 
 Vue.use(Vuex);
+Vue.use(velayPlugin);
 
 /**
  * Decorators
