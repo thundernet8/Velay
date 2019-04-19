@@ -12,6 +12,7 @@ function collectDecorator(decorator: string, target: any, key: string, descripto
     if (!target.constructor) {
         return;
     }
+    target.constructor.__local_decorators__ = target.constructor.__local_decorators__ || [];
     target.constructor.__local_decorators__.push({
         type: decorator,
         key,
