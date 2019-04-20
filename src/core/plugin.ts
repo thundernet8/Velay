@@ -33,6 +33,8 @@ const plugin = {
                 if (!instance) {
                     return;
                 }
+
+                const simpleInstance = instance.__proto__ ? Object.create(null) : instance;
                 const vuePropKeys = Object.getOwnPropertyNames(vueInstance);
                 const paramKeys = Object.getOwnPropertyNames(instance).filter(k => !vuePropKeys.includes(k));
                 paramKeys.forEach(key => {
@@ -40,11 +42,12 @@ const plugin = {
                     if (isFunction(instance[key]) || isStoreService(instance[key])) {
                         handleStoreServiceBinding(instance[key], this);
                         (this as any)[key] = instance[key];
+                        simpleInstance[key] = instance[key];
                     }
                 });
 
                 // dispose instance
-                componentInstanceMap[vid] = null;
+                componentInstanceMap[vid] = simpleInstance;
             }
         });
     }
