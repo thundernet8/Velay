@@ -5,6 +5,8 @@ import velayPlugin from './core/plugin';
 Vue.use(Vuex);
 Vue.use(velayPlugin);
 
+declare var window: any;
+
 /**
  * Decorators
  */
@@ -96,5 +98,9 @@ Object.defineProperty(Velay, 'providers', {
         return StaticInjector.list();
     }
 });
+
+if (typeof window !== 'undefined') {
+    window.Velay = Velay;
+}
 
 export default Velay;
