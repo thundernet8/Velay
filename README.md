@@ -22,9 +22,13 @@
 ### Write Store Class
 
 ```ts
+// my-store.ts
 import { Injectable, State, StoreService } from 'velay';
 
 export class MyStoreService extends StoreService {
+    @State
+    count: number = 0;
+
     @State
     title: string = 'hello, velay';
 
@@ -34,25 +38,32 @@ export class MyStoreService extends StoreService {
     changeTitle(title: string) {
         this.title = title;
     }
+
+    addCount() {
+        this.count = this.count + 1;
+    }
 }
 ```
 
 ### Write Component
 
 ```ts
+// my-component.vue
 <template>
     <div>
-        <h2>{{ store.title }}</h2>
+        <h2>{{ store.title }}{{ store.count }}</h2>
         <ul>
             <li v-for="(item, index) in store.list" :key="index">
                 <div>{{ item.name }}-{{ item.count }}</div>
             </li>
         </ul>
         <button @click="store.changeTitle('new hello')">Change title</button>
+        <button @click="store.addCount">Add count</button>
     </div>
 </template>
 <script lang="ts">
 import { Vue, Component } from 'velay';
+import { MyStoreService } from './my-store';
 
 @Component({})
 export default class MyComponent extends Vue {
