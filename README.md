@@ -80,6 +80,14 @@ export default class MyComponent extends Vue {
 
 ## More
 
+### Debug
+
+开启 debug
+
+```ts
+Velay.config.debug = true;
+```
+
 ### Vetur
 
 开启模板语法检查，配合 velay 获得更佳的强类型校验

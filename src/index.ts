@@ -89,7 +89,7 @@ Object.defineProperty(Velay, 'config', {
 Object.defineProperty(Velay, 'version', {
     configurable: false,
     writable: false,
-    value: '1.0.1'
+    value: '1.0.2'
 });
 
 Object.defineProperty(Velay, 'providers', {
